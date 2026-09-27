@@ -1,0 +1,189 @@
+{
+  "name": "PayrollRun",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "pay_period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Pay period start date."
+    },
+    "pay_period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Pay period end date. Used as the salary expense date when posted."
+    },
+    "pay_frequency": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "bi_weekly",
+        "weekly"
+      ],
+      "default": "monthly"
+    },
+    "account_id": {
+      "type": "string",
+      "description": "FinanceAccount salaries are posted to when approved."
+    },
+    "account_name": {
+      "type": "string",
+      "description": "Snapshot of account name for display."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "approved",
+        "paid"
+      ],
+      "default": "draft",
+      "description": "draft = editable; approved = posted to Finance; paid = settled."
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "employee_id": {
+            "type": "string"
+          },
+          "employee_name": {
+            "type": "string"
+          },
+          "employee_phone": {
+            "type": "string"
+          },
+          "basic_pay": {
+            "type": "number",
+            "default": 0
+          },
+          "allowances": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number",
+                  "default": 0
+                }
+              }
+            },
+            "default": []
+          },
+          "deductions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number",
+                  "default": 0
+                }
+              }
+            },
+            "default": []
+          },
+          "gross": {
+            "type": "number",
+            "default": 0
+          },
+          "deductions_total": {
+            "type": "number",
+            "default": 0
+          },
+          "net": {
+            "type": "number",
+            "default": 0
+          }
+        }
+      },
+      "default": []
+    },
+    "total_gross": {
+      "type": "number",
+      "default": 0
+    },
+    "total_allowances": {
+      "type": "number",
+      "default": 0
+    },
+    "total_deductions": {
+      "type": "number",
+      "default": 0
+    },
+    "total_net": {
+      "type": "number",
+      "default": 0
+    },
+    "employee_count": {
+      "type": "integer",
+      "default": 0
+    },
+    "posted_finance_transaction_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "FinanceTransaction ids created when this run is posted. Prevents duplicate posting."
+    },
+    "posted_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "created_by_id": {
+      "type": "string"
+    },
+    "created_by_email": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "pay_period_start",
+    "pay_period_end",
+    "pay_frequency",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

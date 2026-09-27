@@ -1,0 +1,106 @@
+{
+  "name": "PipelineAutomation",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "name": {
+      "type": "string",
+      "description": "Plain-language rule name shown to the owner (e.g. 'Follow up with interested prospects')."
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "stage_entered",
+        "appointment_booked",
+        "appointment_completed",
+        "no_contact_days",
+        "follow_up_due",
+        "new_person",
+        "becomes_customer",
+        "audience_broadcast"
+      ],
+      "description": "What starts the automation. stage_entered = a person enters a pipeline stage; no_contact_days = no contact for X days; follow_up_due = follow-up date arrives; new_person = new person added; becomes_customer = person reaches the final success stage; audience_broadcast = manual broadcast to a selected group (no event trigger \u2014 owner clicks 'Send now')."
+    },
+    "trigger_config": {
+      "type": "object",
+      "description": "Trigger parameters. For stage_entered: { stage }. For no_contact_days: { days }. For audience_broadcast: {} (empty). Empty otherwise.",
+      "properties": {},
+      "default": {}
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "create_followup",
+        "create_reminder",
+        "prepare_whatsapp",
+        "prepare_message",
+        "prepare_email",
+        "add_label",
+        "move_stage",
+        "create_task",
+        "send_to_audience"
+      ],
+      "description": "What FADS does when the trigger fires. All communication actions are PREPARED only \u2014 the owner must approve sending. send_to_audience = broadcast to a selected audience group (paired with trigger_type audience_broadcast)."
+    },
+    "action_config": {
+      "type": "object",
+      "description": "Action parameters. create_followup: { days_ahead }. add_label: { label }. move_stage: { stage }. create_task: { task_title, days_ahead }. prepare_*: { template_category }. send_to_audience: { audience_type, audience_values, channels, message, template_category }. Empty otherwise.",
+      "properties": {},
+      "default": {}
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused"
+      ],
+      "default": "active",
+      "description": "active = rule fires on matching triggers; paused = owner temporarily disabled it."
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Display name snapshot of the owner who created the rule."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "trigger_type",
+    "action_type",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

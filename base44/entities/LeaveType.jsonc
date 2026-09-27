@@ -1,0 +1,93 @@
+{
+  "name": "LeaveType",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name e.g. Annual Leave, Sick Leave, Compassionate Leave."
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_paid": {
+      "type": "boolean",
+      "default": true,
+      "description": "True if this leave type is paid."
+    },
+    "default_annual_allowance": {
+      "type": "number",
+      "default": 0,
+      "description": "Default annual allowance in days. Overridden by leave policy allowances."
+    },
+    "carry_over_allowed": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if unused days can be carried over to the next year."
+    },
+    "carry_over_limit": {
+      "type": "number",
+      "default": 0,
+      "description": "Maximum days that can be carried over."
+    },
+    "requires_approval": {
+      "type": "boolean",
+      "default": true,
+      "description": "True if requests of this type require manager/HR approval."
+    },
+    "requires_documentation_after_days": {
+      "type": "integer",
+      "default": 0,
+      "description": "Documentation required for requests longer than this many days. 0 = never."
+    },
+    "colour": {
+      "type": "string",
+      "default": "#3b82f6",
+      "description": "Hex colour for calendar display."
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "is_paid",
+    "default_annual_allowance",
+    "is_active"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

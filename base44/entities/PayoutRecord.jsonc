@@ -1,0 +1,106 @@
+{
+  "name": "PayoutRecord",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Affiliate's user ID for RLS isolation."
+    },
+    "affiliate_id": {
+      "type": "string"
+    },
+    "payout_request_id": {
+      "type": "string",
+      "description": "The PayoutRequest this record fulfils."
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "bank_transfer",
+        "paypal",
+        "other"
+      ]
+    },
+    "payment_reference": {
+      "type": "string",
+      "description": "Transaction reference from the payment provider."
+    },
+    "processed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "processed_by": {
+      "type": "string",
+      "description": "Platform Owner who recorded this payout."
+    },
+    "commission_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Commissions included in this payout."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed"
+      ],
+      "default": "completed"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "user_id",
+    "affiliate_id",
+    "amount",
+    "currency",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

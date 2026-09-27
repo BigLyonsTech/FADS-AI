@@ -1,0 +1,247 @@
+{
+  "name": "TranscriptSession",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "title": {
+      "type": "string",
+      "description": "Session title."
+    },
+    "session_type": {
+      "type": "string",
+      "enum": [
+        "business_meeting",
+        "lecture",
+        "government_council",
+        "interview",
+        "voice_note",
+        "other"
+      ],
+      "default": "other",
+      "description": "Type of transcription session."
+    },
+    "session_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time the session was recorded."
+    },
+    "language": {
+      "type": "string",
+      "default": "en",
+      "description": "ISO-639-1 language code for the transcript."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "completed"
+      ],
+      "default": "draft",
+      "description": "draft = in progress or unreviewed; completed = reviewed and finalised."
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Optional list of participant names."
+    },
+    "folder_id": {
+      "type": "string",
+      "description": "Optional folder ID for organisation."
+    },
+    "folder_name": {
+      "type": "string",
+      "description": "Snapshot of folder name for display."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tag names applied to this session."
+    },
+    "segment_count": {
+      "type": "integer",
+      "default": 0,
+      "description": "Number of transcript segments."
+    },
+    "duration_seconds": {
+      "type": "integer",
+      "default": 0,
+      "description": "Total recording duration in seconds."
+    },
+    "full_text": {
+      "type": "string",
+      "description": "Concatenated transcript text for search and preview."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes about the session."
+    },
+    "summary": {
+      "type": "string",
+      "description": "AI-generated or user-edited summary. Draft until approved."
+    },
+    "minutes": {
+      "type": "string",
+      "description": "AI-generated or user-edited meeting minutes. Draft until approved."
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "approved": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "default": [],
+      "description": "Key decisions or resolutions. Each can be approved individually."
+    },
+    "action_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "done",
+              "cancelled"
+            ],
+            "default": "open"
+          },
+          "approved": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "default": [],
+      "description": "Action points with optional owner and due date. Each can be approved individually."
+    },
+    "lecture_notes": {
+      "type": "string",
+      "description": "AI-generated or user-edited lecture notes. Only for Lecture session type. Draft until approved."
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_review",
+        "approved",
+        "rejected"
+      ],
+      "default": "draft",
+      "description": "Overall review status. draft = AI drafts generated or no AI; in_review = user reviewing; approved = user approved; rejected = user rejected AI drafts."
+    },
+    "ai_generated_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When AI drafts were last generated."
+    },
+    "is_favourite": {
+      "type": "boolean",
+      "default": false,
+      "description": "User-marked favourite for quick access."
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false,
+      "description": "Archived sessions are hidden from the main library view."
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "User ID of the person who set the review status."
+    },
+    "reviewed_by_name": {
+      "type": "string",
+      "description": "Display name snapshot of the reviewer."
+    },
+    "reviewed_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the review status was last set."
+    },
+    "imported_file_uri": {
+      "type": "string",
+      "description": "Private file URI for imported TXT files. Null for recorded sessions."
+    },
+    "imported_file_name": {
+      "type": "string",
+      "description": "Original file name of imported file."
+    },
+    "created_by": {
+      "type": "string",
+      "description": "User ID of the session creator."
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Display name snapshot of the creator."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "title",
+    "session_type",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

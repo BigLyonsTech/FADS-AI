@@ -1,0 +1,116 @@
+{
+  "name": "ComplianceItem",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "title": {
+      "type": "string",
+      "description": "Compliance item title e.g. Annual Tax Filing, Fire Safety Certificate."
+    },
+    "description": {
+      "type": "string",
+      "description": "What needs to be done and why it matters. Operational guidance, not legal advice."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tax",
+        "employment_law",
+        "health_safety",
+        "data_protection",
+        "licensing",
+        "insurance",
+        "other"
+      ],
+      "description": "Compliance category for grouping and filtering."
+    },
+    "owner_employee_id": {
+      "type": "string",
+      "description": "Employee responsible for this item (optional)."
+    },
+    "owner_name": {
+      "type": "string",
+      "description": "Snapshot of owner name for display."
+    },
+    "deadline_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Next deadline date."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "overdue"
+      ],
+      "default": "pending",
+      "description": "pending = not started; in_progress = being worked on; completed = done; overdue = past deadline and not completed."
+    },
+    "reminder_days": {
+      "type": "integer",
+      "default": 7,
+      "description": "Days before deadline to show a reminder alert."
+    },
+    "last_completed_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this item was last completed (for recurring items)."
+    },
+    "recurrence": {
+      "type": "string",
+      "enum": [
+        "one_off",
+        "monthly",
+        "quarterly",
+        "annual"
+      ],
+      "default": "annual",
+      "description": "How often this compliance item recurs."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional operational notes."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "title",
+    "category",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

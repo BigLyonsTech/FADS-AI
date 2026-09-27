@@ -1,0 +1,127 @@
+{
+  "name": "CRMContact",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "first_name": {
+      "type": "string",
+      "description": "Contact first name."
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Contact last name."
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Primary phone (mobile). Kept in sync with `mobile` for backward compatibility with WhatsApp/CRM flows."
+    },
+    "mobile": {
+      "type": "string",
+      "description": "Mobile number in international format (e.g. +353861234567)."
+    },
+    "landline": {
+      "type": "string",
+      "description": "Optional landline number in international format."
+    },
+    "organisation_name": {
+      "type": "string",
+      "description": "Company / org / household this contact belongs to (free text)."
+    },
+    "crm_organisation_id": {
+      "type": "string",
+      "description": "Optional link to a CRMOrganisation record."
+    },
+    "contact_type": {
+      "type": "string",
+      "description": "Workspace-aware: lead/prospect/customer (business), parent/student (school), applicant/alumni (university), member/visitor/donor (church)."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "engaged",
+        "qualified",
+        "active",
+        "converted",
+        "inactive"
+      ],
+      "default": "new"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "source": {
+      "type": "string",
+      "description": "Where the contact came from: website, referral, walk-in, event, etc."
+    },
+    "notes": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "assigned_user_id": {
+      "type": "string"
+    },
+    "assigned_user_name": {
+      "type": "string"
+    },
+    "last_contact_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_follow_up_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Records are separated by data mode. demo = fictional sample data; live = real organisation data."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "first_name",
+    "contact_type",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

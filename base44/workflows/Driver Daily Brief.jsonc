@@ -1,0 +1,47 @@
+{
+  "name": "Driver Daily Brief",
+  "description": "Each morning, FADS emails driver and self-employed workspace owners a short brief of yesterday's recorded earnings, running costs and net. Reuses existing FinanceTransaction data \u2014 no new data model.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 8 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/Dublin",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "driver_daily_brief",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_brief": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "driverBrief",
+            "args": {
+              "action": "send_driver_daily_brief"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send driver briefs",
+            "description": "Email yesterday's earnings & costs to drivers"
+          }
+        }
+      }
+    ]
+  }
+}

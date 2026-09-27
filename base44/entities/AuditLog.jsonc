@@ -1,0 +1,76 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string"
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "user",
+        "agent",
+        "system"
+      ]
+    },
+    "actor_user_id": {
+      "type": "string"
+    },
+    "actor_user_email": {
+      "type": "string"
+    },
+    "actor_agent_name": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "entity_type": {
+      "type": "string"
+    },
+    "entity_id": {
+      "type": "string"
+    },
+    "before": {
+      "type": "object"
+    },
+    "after": {
+      "type": "object"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure"
+      ],
+      "default": "success"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "actor_type",
+    "action"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

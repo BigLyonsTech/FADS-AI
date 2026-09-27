@@ -1,0 +1,243 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "organisation_name": {
+      "type": "string",
+      "description": "Snapshot of org name for display."
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User who initiated the subscription."
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "plan_id": {
+      "type": "string",
+      "description": "SubscriptionPlan ID."
+    },
+    "plan_name": {
+      "type": "string",
+      "description": "Snapshot of the plan display name (e.g. 'Small Business', 'School') for admin views without a join."
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "starter",
+        "business",
+        "professional"
+      ],
+      "description": "FADS Business tier snapshot at purchase. Only set for small_business subscriptions. Null for school/church/university subscriptions (separate packages, full access)."
+    },
+    "org_type": {
+      "type": "string",
+      "enum": [
+        "small_business",
+        "school",
+        "university",
+        "church"
+      ]
+    },
+    "payment_provider": {
+      "type": "string",
+      "enum": [
+        "none",
+        "stripe",
+        "hba",
+        "paystack",
+        "manual"
+      ],
+      "default": "none",
+      "description": "Provider that verified the payment/subscription. 'none' = no verified payment yet. 'manual' = FADS admin manually verified a bank transfer. External providers (hba, paystack) set this via webhook when connected later."
+    },
+    "provider_customer_reference": {
+      "type": "string",
+      "description": "Provider-agnostic customer reference (Paystack customer code, HBA customer id, etc.)."
+    },
+    "provider_subscription_reference": {
+      "type": "string",
+      "description": "Provider-agnostic subscription/reference code (Paystack subscription code, HBA mandate id, etc.)."
+    },
+    "stripe_customer_id": {
+      "type": "string"
+    },
+    "stripe_subscription_id": {
+      "type": "string"
+    },
+    "stripe_checkout_session_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "payment_pending",
+        "active",
+        "past_due",
+        "cancelled",
+        "expired",
+        "incomplete"
+      ],
+      "default": "trial",
+      "description": "trial = introductory access; payment_pending = customer reported payment (bank transfer) awaiting FADS admin verification; active = payment verified / regular payment succeeded; past_due = payment failed; cancelled = user or admin cancelled; expired = trial ended without payment; incomplete = checkout started but not completed. This status reflects VERIFIED payment/subscription data only \u2014 an organisation existing without a subscription record does NOT imply any of these."
+    },
+    "access_type": {
+      "type": "string",
+      "enum": [
+        "paid_trial",
+        "beta_manual"
+      ],
+      "default": "paid_trial",
+      "description": "paid_trial = paid introductory access; beta_manual = manually granted beta access by Platform Owner (no payment, no affiliate commission)."
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "none",
+        "bank_transfer",
+        "card",
+        "mobile_money",
+        "cash",
+        "other"
+      ],
+      "default": "none",
+      "description": "How the customer paid, as recorded by a FADS admin during manual verification. 'none' = no payment recorded yet."
+    },
+    "payment_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount the customer paid, as recorded during manual verification (may differ from monthly_price)."
+    },
+    "payment_currency": {
+      "type": "string",
+      "description": "Currency of the recorded payment (may differ from the plan billing currency)."
+    },
+    "payment_reference": {
+      "type": "string",
+      "description": "Bank transfer reference / receipt number / transaction reference supplied by the customer or admin."
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date the customer made the payment, as recorded by the admin."
+    },
+    "payment_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "True once a FADS admin has manually verified the payment and activated the subscription."
+    },
+    "payment_verified_by": {
+      "type": "string",
+      "description": "User id of the FADS admin who verified the payment."
+    },
+    "payment_verified_by_email": {
+      "type": "string",
+      "description": "Email snapshot of the FADS admin who verified the payment."
+    },
+    "payment_verified_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the FADS admin verified the payment."
+    },
+    "trial_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trial_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the trial or beta access expires."
+    },
+    "subscription_start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the verified paid subscription began (distinct from trial_start). Set when payment is verified."
+    },
+    "current_period_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "current_period_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Next billing / renewal / expiry date where available."
+    },
+    "cancel_at_period_end": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when the user cancelled during trial \u2014 access continues until trial_end, then no renewal."
+    },
+    "cancelled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cancellation_reason": {
+      "type": "string"
+    },
+    "referral_code_used": {
+      "type": "string",
+      "description": "Affiliate referral code preserved through checkout."
+    },
+    "affiliate_attribution_id": {
+      "type": "string",
+      "description": "ReferralAttribution ID if an affiliate was attributed."
+    },
+    "monthly_price": {
+      "type": "number",
+      "description": "Snapshot of the subscription amount in the billing currency."
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD",
+      "description": "Billing currency."
+    },
+    "reminder_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when the 24-hour renewal reminder has been sent."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "user_id",
+    "plan_id",
+    "org_type",
+    "status",
+    "currency"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "name": "FinanceOfficerConversation",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Owning user. Enforced by RLS."
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "officer"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "transaction",
+                    "invoice",
+                    "account",
+                    "reconciliation",
+                    "report"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "label",
+                "url"
+              ]
+            },
+            "default": []
+          },
+          "period_note": {
+            "type": "string"
+          },
+          "insufficient_data": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "role",
+          "content",
+          "timestamp"
+        ]
+      },
+      "default": []
+    },
+    "current_month_key": {
+      "type": "string",
+      "description": "YYYY-MM for usage tracking. Resets count when month changes."
+    },
+    "current_month_count": {
+      "type": "integer",
+      "default": 0,
+      "description": "Questions asked in the current month."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "user_id",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.user_id": "{{user.id}}"
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

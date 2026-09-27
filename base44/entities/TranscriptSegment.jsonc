@@ -1,0 +1,79 @@
+{
+  "name": "TranscriptSegment",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Parent TranscriptSession ID."
+    },
+    "sequence": {
+      "type": "integer",
+      "description": "Order within the session (0-based)."
+    },
+    "speaker_name": {
+      "type": "string",
+      "description": "Optional speaker name for this segment."
+    },
+    "start_time": {
+      "type": "number",
+      "description": "Start time in seconds from session start."
+    },
+    "end_time": {
+      "type": "number",
+      "description": "End time in seconds from session start."
+    },
+    "text": {
+      "type": "string",
+      "description": "Transcript text for this segment."
+    },
+    "confidence": {
+      "type": "number",
+      "description": "Speech recognition confidence (0-1). Optional."
+    },
+    "is_final": {
+      "type": "boolean",
+      "default": true,
+      "description": "True if this is a final (not interim) recognition result."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "session_id",
+    "sequence",
+    "text"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

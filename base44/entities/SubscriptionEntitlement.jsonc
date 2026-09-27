@@ -1,0 +1,89 @@
+{
+  "name": "SubscriptionEntitlement",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "subscription_id": {
+      "type": "string",
+      "description": "Parent Subscription record."
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "web_stripe",
+        "apple_iap",
+        "google_play",
+        "manual"
+      ],
+      "description": "Purchase channel. web_stripe = Stripe checkout (future); manual = Platform Owner granted beta access; apple_iap and google_play are future store-compliance tasks."
+    },
+    "external_id": {
+      "type": "string",
+      "description": "Stripe subscription ID, Apple transaction ID, Google purchase token, or 'beta_manual' for manual grants."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "revoked",
+        "grace_period"
+      ],
+      "default": "active"
+    },
+    "entitlement_type": {
+      "type": "string",
+      "description": "e.g. 'trial_access', 'full_access', or 'beta_access'."
+    },
+    "granted_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "channel",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

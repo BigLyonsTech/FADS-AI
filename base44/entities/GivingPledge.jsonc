@@ -1,0 +1,94 @@
+{
+  "name": "GivingPledge",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "CRMContact (member/donor) this pledge is for. Optional."
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Snapshot of contact name for display."
+    },
+    "fund": {
+      "type": "string",
+      "description": "Fund / category the pledge is committed to e.g. Building Fund, Tithes, Missions."
+    },
+    "pledged_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount committed."
+    },
+    "contributed_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Running total of giving linked to this pledge. Updated when giving is recorded against the pledge."
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional target/fulfilment date."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "fulfilled",
+        "cancelled"
+      ],
+      "default": "open"
+    },
+    "note": {
+      "type": "string"
+    },
+    "linked_transaction_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "FinanceTransaction ids that fulfilled this pledge. Prevents double-counting."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "fund",
+    "pledged_amount",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

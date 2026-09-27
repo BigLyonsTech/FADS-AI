@@ -1,0 +1,91 @@
+{
+  "name": "FinanceAccount",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "name": {
+      "type": "string"
+    },
+    "account_class": {
+      "type": "string",
+      "enum": [
+        "asset",
+        "liability",
+        "equity",
+        "income",
+        "expense"
+      ],
+      "description": "Top-level accounting class. Guides the Chart of Accounts layout. Optional for legacy accounts."
+    },
+    "account_category": {
+      "type": "string",
+      "description": "Plain-English category within the class, e.g. 'Cash & Bank', 'Fixed Assets'. Optional for legacy accounts."
+    },
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "cash",
+        "bank",
+        "savings",
+        "mobile_money",
+        "petty_cash",
+        "other"
+      ],
+      "default": "cash"
+    },
+    "account_number": {
+      "type": "string"
+    },
+    "opening_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "currency": {
+      "type": "string",
+      "description": "Inherited from organisation at creation (denormalised)."
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Records are separated by data mode. demo = fictional sample data; live = real organisation data."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "account_type"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

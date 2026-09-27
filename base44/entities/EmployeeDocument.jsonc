@@ -1,0 +1,154 @@
+{
+  "name": "EmployeeDocument",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this document belongs to."
+    },
+    "document_type_id": {
+      "type": "string",
+      "description": "DocumentType ID for categorisation."
+    },
+    "document_type_name": {
+      "type": "string",
+      "description": "Snapshot of document type name for display."
+    },
+    "title": {
+      "type": "string",
+      "description": "Document title."
+    },
+    "description": {
+      "type": "string"
+    },
+    "upload_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the document was uploaded/recorded."
+    },
+    "issue_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the document was issued (if applicable)."
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the document expires (if applicable)."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "current",
+        "expired",
+        "archived"
+      ],
+      "default": "current",
+      "description": "draft = in progress; current = active; expired = past expiry date; archived = superseded or no longer active."
+    },
+    "confidentiality_level": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "default": "confidential",
+      "description": "internal = visible to HR and managers; confidential = HR only; restricted = HR admin only."
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "pending = awaiting HR verification; verified = checked and confirmed; rejected = failed verification."
+    },
+    "verifier_id": {
+      "type": "string",
+      "description": "User ID of the HR user who verified this document."
+    },
+    "verifier_name": {
+      "type": "string",
+      "description": "Display name snapshot of the verifier."
+    },
+    "verification_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "verification_notes": {
+      "type": "string",
+      "description": "Notes recorded during verification. Restricted \u2014 HR only."
+    },
+    "file_uri": {
+      "type": "string",
+      "description": "Private file URI from UploadPrivateFile. Null in Demo mode (no real files stored)."
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name."
+    },
+    "file_size": {
+      "type": "integer",
+      "description": "File size in bytes."
+    },
+    "file_content_type": {
+      "type": "string",
+      "description": "MIME type of the uploaded file."
+    },
+    "internal_notes": {
+      "type": "string",
+      "description": "Private HR notes about this document. Restricted \u2014 HR only."
+    },
+    "shared_with_employee": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if HR has explicitly shared this document with the employee for self-service viewing."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "title",
+    "status",
+    "confidentiality_level",
+    "verification_status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

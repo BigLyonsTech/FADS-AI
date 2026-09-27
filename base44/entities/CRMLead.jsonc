@@ -1,0 +1,91 @@
+{
+  "name": "CRMLead",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "title": {
+      "type": "string",
+      "description": "Lead / deal / enquiry title."
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "Primary CRMContact for this lead."
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Snapshot of contact name for display."
+    },
+    "stage": {
+      "type": "string",
+      "default": "New",
+      "description": "Pipeline stage name. Matches a CRMPipelineStage record."
+    },
+    "value": {
+      "type": "number",
+      "default": 0,
+      "description": "Estimated deal / enrolment / donation value."
+    },
+    "currency": {
+      "type": "string",
+      "description": "Denormalised from organisation at creation."
+    },
+    "source": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "assigned_user_id": {
+      "type": "string"
+    },
+    "assigned_user_name": {
+      "type": "string"
+    },
+    "expected_close_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "lost_reason": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "title",
+    "stage",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

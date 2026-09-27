@@ -1,0 +1,84 @@
+{
+  "name": "TaxProfile",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "country": {
+      "type": "string",
+      "description": "Jurisdiction this profile applies to (e.g. 'IE', 'NG'). One profile per organisation per country per data mode, so jurisdiction-specific Tax Profile information is preserved when switching back and forth. Empty/missing on legacy records is treated as the organisation's own country."
+    },
+    "tax_year": {
+      "type": "string",
+      "description": "Tax year e.g. '2026'."
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "Jurisdiction-specific entity/business type e.g. sole_trader, limited_company, individual_sole_proprietor, company."
+    },
+    "state_region": {
+      "type": "string",
+      "description": "State/region for federal+state jurisdictions (e.g. a Nigerian state)."
+    },
+    "tax_ids": {
+      "type": "object",
+      "description": "Flexible key/value store for jurisdiction-specific tax identification numbers (TIN, PPS, CRO, VAT number, etc.). Keys come from the active country pack's taxIdFields + vatIdField.",
+      "properties": {},
+      "default": {}
+    },
+    "vat_registered": {
+      "type": "boolean",
+      "default": false
+    },
+    "employer": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has PAYE / employer obligations."
+    },
+    "filing_frequency": {
+      "type": "string",
+      "description": "Filing frequency where relevant e.g. monthly, quarterly, annual."
+    },
+    "notes": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "tax_year",
+    "entity_type",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

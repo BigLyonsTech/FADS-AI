@@ -1,0 +1,135 @@
+{
+  "name": "LeaveRequest",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this request belongs to."
+    },
+    "employee_name": {
+      "type": "string",
+      "description": "Snapshot of employee name for display."
+    },
+    "leave_type_id": {
+      "type": "string",
+      "description": "LeaveType ID."
+    },
+    "leave_type_name": {
+      "type": "string",
+      "description": "Snapshot of leave type name for display."
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "First day of leave (inclusive)."
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Last day of leave (inclusive)."
+    },
+    "total_days": {
+      "type": "number",
+      "description": "Total working days requested (excluding weekends and public holidays)."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Brief reason for leave. Minimised \u2014 no diagnoses or medical details."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "pending = awaiting decision; approved = approved; rejected = denied; cancelled = withdrawn by requester."
+    },
+    "requested_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requested_by": {
+      "type": "string",
+      "description": "User ID of the person who submitted the request."
+    },
+    "requested_by_name": {
+      "type": "string"
+    },
+    "approver_id": {
+      "type": "string",
+      "description": "User ID of the person who approved or rejected the request."
+    },
+    "approver_name": {
+      "type": "string"
+    },
+    "decision_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decision_comments": {
+      "type": "string",
+      "description": "Comments recorded during approval or rejection."
+    },
+    "cancelled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cancelled_by": {
+      "type": "string"
+    },
+    "cancelled_by_name": {
+      "type": "string"
+    },
+    "documentation_provided": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if supporting documentation was provided (e.g. for extended sick leave)."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "leave_type_id",
+    "start_date",
+    "end_date",
+    "total_days",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

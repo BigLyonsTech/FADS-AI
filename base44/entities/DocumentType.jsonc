@@ -1,0 +1,82 @@
+{
+  "name": "DocumentType",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name e.g. Employment Contract, National ID."
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "contract",
+        "offer_letter",
+        "identification",
+        "tax_employment_form",
+        "qualification",
+        "training_certificate",
+        "policy",
+        "acknowledgement",
+        "other"
+      ],
+      "description": "Document category for grouping and filtering."
+    },
+    "is_confidential_default": {
+      "type": "boolean",
+      "default": true,
+      "description": "Default confidentiality level for new documents of this type."
+    },
+    "is_required_for_onboarding": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this document type is required during onboarding."
+    },
+    "has_expiry": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if documents of this type typically have an expiry date."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "category"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

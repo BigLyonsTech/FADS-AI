@@ -1,0 +1,84 @@
+{
+  "name": "MessageTemplate",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "first_contact",
+        "follow_up",
+        "proposal_follow_up",
+        "thank_you",
+        "customer_check_in",
+        "payment_reminder",
+        "custom"
+      ],
+      "description": "Template category. The first six are curated defaults adapted per workspace; custom = owner-created."
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name for the template."
+    },
+    "body": {
+      "type": "string",
+      "description": "Message body. Supports {name} (first name) and {business} (organisation_name) placeholders for personalisation."
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "whatsapp",
+        "email",
+        "message"
+      ],
+      "default": "whatsapp",
+      "description": "Which channel this template is for."
+    },
+    "is_builtin": {
+      "type": "boolean",
+      "default": false,
+      "description": "True for curated default templates (read-only). Owner templates are false."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "category",
+    "name",
+    "body",
+    "channel",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

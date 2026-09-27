@@ -1,0 +1,55 @@
+{
+  "name": "AffiliateTermsAcceptance",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The accepting user's ID for RLS isolation."
+    },
+    "affiliate_id": {
+      "type": "string",
+      "description": "The AffiliateProfile this acceptance belongs to."
+    },
+    "terms_version": {
+      "type": "string",
+      "description": "Version of the affiliate terms accepted."
+    },
+    "accepted_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "terms_version"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

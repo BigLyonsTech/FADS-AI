@@ -1,0 +1,89 @@
+{
+  "name": "OrganisationMembership",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "organisation_id": {
+      "type": "string"
+    },
+    "organisation_name": {
+      "type": "string"
+    },
+    "role_in_org": {
+      "type": "string",
+      "enum": [
+        "organisation_owner",
+        "administrator",
+        "finance_user",
+        "hr_user",
+        "standard_staff",
+        "school_administrator",
+        "teacher",
+        "university_administrator",
+        "dean",
+        "lecturer",
+        "registrar",
+        "pastor",
+        "church_administrator",
+        "ministry_leader"
+      ],
+      "default": "standard_staff"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "revoked"
+      ],
+      "default": "active"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "organisation_id",
+    "user_email",
+    "role_in_org",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.organisation_id": {
+            "$in": "{{user.data.authorised_organisations}}"
+          }
+        },
+        {
+          "data.user_id": "{{user.id}}"
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

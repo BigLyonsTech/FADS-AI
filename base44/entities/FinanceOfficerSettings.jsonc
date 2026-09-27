@@ -1,0 +1,52 @@
+{
+  "name": "FinanceOfficerSettings",
+  "type": "object",
+  "properties": {
+    "singleton_key": {
+      "type": "string",
+      "description": "Always 'global' \u2014 enforces a single settings record."
+    },
+    "is_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Global on/off for the Finance Officer across all organisations."
+    },
+    "default_monthly_allowance": {
+      "type": "integer",
+      "default": 50,
+      "description": "Default monthly question allowance per organisation. Per-org overrides take precedence."
+    },
+    "disclaimer_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "updated_by": {
+      "type": "string"
+    },
+    "updated_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "singleton_key"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

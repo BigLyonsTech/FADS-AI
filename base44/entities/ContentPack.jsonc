@@ -1,0 +1,115 @@
+{
+  "name": "ContentPack",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "topic": {
+      "type": "string",
+      "description": "The topic, idea, or announcement the user gave FADS."
+    },
+    "workspace_type": {
+      "type": "string",
+      "enum": [
+        "small_business",
+        "school",
+        "university",
+        "church"
+      ],
+      "description": "Snapshot of org type for workspace-aware display."
+    },
+    "content_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Which content types were requested (social_post, reel_idea, caption, hashtags, email, whatsapp, direct_message, short_message, flyer)."
+    },
+    "social_post": {
+      "type": "string"
+    },
+    "reel_idea": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "hashtags": {
+      "type": "string"
+    },
+    "email_subject": {
+      "type": "string"
+    },
+    "email_preview": {
+      "type": "string"
+    },
+    "email_body": {
+      "type": "string"
+    },
+    "email_cta": {
+      "type": "string"
+    },
+    "whatsapp": {
+      "type": "string"
+    },
+    "direct_message": {
+      "type": "string"
+    },
+    "short_message": {
+      "type": "string"
+    },
+    "flyer_headline": {
+      "type": "string"
+    },
+    "flyer_description": {
+      "type": "string"
+    },
+    "flyer_details": {
+      "type": "string"
+    },
+    "flyer_cta": {
+      "type": "string"
+    },
+    "flyer_visual": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "topic",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

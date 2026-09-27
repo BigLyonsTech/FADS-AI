@@ -1,0 +1,65 @@
+{
+  "name": "CRMPipelineStage",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "name": {
+      "type": "string",
+      "description": "Stage display name e.g. New, Contacted, Engaged, Converted."
+    },
+    "order": {
+      "type": "integer",
+      "default": 0,
+      "description": "Sort order within the pipeline."
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "True for the stage new leads start in."
+    },
+    "color": {
+      "type": "string",
+      "default": "#1a8a8a",
+      "description": "Hex colour for the stage label."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "order",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

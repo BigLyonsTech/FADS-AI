@@ -1,0 +1,106 @@
+{
+  "name": "SubscriptionPlan",
+  "type": "object",
+  "properties": {
+    "org_type": {
+      "type": "string",
+      "enum": [
+        "small_business",
+        "school",
+        "university",
+        "church"
+      ],
+      "description": "Organisation type this plan applies to."
+    },
+    "plan_name": {
+      "type": "string",
+      "description": "Display name e.g. 'Small Business', 'School', 'Church'."
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "starter",
+        "business",
+        "professional"
+      ],
+      "description": "FADS Business tier. Only set on small_business plans (one plan per tier). Null/absent for school/church/university plans, which are separate FADS packages with full access (not tier-gated)."
+    },
+    "monthly_price": {
+      "type": "number",
+      "description": "Fallback monthly recurring price in USD. 0 means not yet configured. Overridden by regional_prices for specific billing currencies."
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "regional_prices": {
+      "type": "object",
+      "description": "Currency-keyed regional pricing. Keys are billing currency codes (NGN, EUR, GBP, USD). Each value: { label, currency, trial_price, trial_days, monthly_price, status, indicative_converted_value, exchange_rate_timestamp, updated_date }. status is 'active', 'coming_soon', or 'hidden'. Falls back to monthly_price/currency if a currency is not configured.",
+      "default": {}
+    },
+    "trial_price": {
+      "type": "number",
+      "default": 1,
+      "description": "Fallback introductory price in USD when a regional currency is not configured."
+    },
+    "trial_days": {
+      "type": "integer",
+      "default": 5
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "exchange_rate_service_connected": {
+      "type": "boolean",
+      "default": false,
+      "description": "True only when a verified exchange-rate service is connected. Until true, indicative_converted_value fields remain disabled and no converted values are displayed."
+    },
+    "stripe_price_id": {
+      "type": "string",
+      "description": "Stripe Price ID for the monthly recurring charge. Set when the Platform Owner configures the monthly price."
+    },
+    "stripe_trial_price_id": {
+      "type": "string",
+      "description": "Stripe Price ID for the introductory one-time charge. Shared across plans."
+    },
+    "terms_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "updated_by": {
+      "type": "string"
+    },
+    "updated_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "org_type",
+    "plan_name",
+    "monthly_price",
+    "currency",
+    "trial_price",
+    "trial_days",
+    "is_active"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

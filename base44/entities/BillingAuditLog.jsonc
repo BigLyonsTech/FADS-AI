@@ -1,0 +1,87 @@
+{
+  "name": "BillingAuditLog",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "user",
+        "system",
+        "stripe",
+        "external_provider"
+      ]
+    },
+    "actor_user_id": {
+      "type": "string"
+    },
+    "actor_user_email": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "entity_type": {
+      "type": "string"
+    },
+    "entity_id": {
+      "type": "string"
+    },
+    "before": {
+      "type": "object"
+    },
+    "after": {
+      "type": "object"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure"
+      ],
+      "default": "success"
+    },
+    "payment_provider": {
+      "type": "string",
+      "description": "Provider associated with this log entry (stripe, hba, paystack, manual)."
+    },
+    "stripe_reference": {
+      "type": "string",
+      "description": "Stripe event/charge/subscription ID for traceability."
+    },
+    "provider_reference": {
+      "type": "string",
+      "description": "Provider-agnostic reference (Paystack/HBA transaction or subscription reference)."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "actor_type",
+    "action"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

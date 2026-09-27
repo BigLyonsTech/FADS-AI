@@ -1,0 +1,78 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "description": "Built-in app role (admin = platform-level operator)"
+    },
+    "platform_owner": {
+      "type": "boolean",
+      "default": false,
+      "description": "Platform Owner flag. Managed by platform admin only; never set by self-registration."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "disabled"
+      ],
+      "default": "active"
+    },
+    "active_organisation_id": {
+      "type": "string",
+      "description": "Currently selected workspace organisation id."
+    },
+    "active_org_role": {
+      "type": "string",
+      "description": "Role the user holds in the active organisation (UI convenience, maintained server-side)."
+    },
+    "authorised_organisations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Organisation ids where the user holds an active membership. Server-maintained; used by RLS as the data-isolation ceiling."
+    },
+    "hr_organisations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Organisation ids where the user holds an HR-authorised role. Server-maintained; used by HR entity RLS to restrict access to HR roles only."
+    },
+    "default_organisation_id": {
+      "type": "string",
+      "description": "Organisation to open by default after login."
+    },
+    "deletion_requested": {
+      "type": "boolean",
+      "default": false,
+      "description": "User has requested account deletion. Access is revoked; full purge handled by platform owner."
+    },
+    "deletion_requested_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the deletion request was submitted."
+    },
+    "export_requested": {
+      "type": "boolean",
+      "default": false,
+      "description": "User has requested a data export."
+    },
+    "export_requested_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the most recent data export was requested."
+    }
+  },
+  "required": [
+    "role"
+  ]
+}

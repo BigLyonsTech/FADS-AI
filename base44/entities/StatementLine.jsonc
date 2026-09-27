@@ -1,0 +1,120 @@
+{
+  "name": "StatementLine",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "reconciliation_id": {
+      "type": "string",
+      "description": "Parent reconciliation session."
+    },
+    "row_index": {
+      "type": "integer",
+      "description": "Original row number in the uploaded CSV (1-based after header)."
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "description": {
+      "type": "string"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "amount_in": {
+      "type": "number",
+      "default": 0,
+      "description": "Money received per statement (credit)."
+    },
+    "amount_out": {
+      "type": "number",
+      "default": 0,
+      "description": "Money paid per statement (debit)."
+    },
+    "balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Running balance shown on the statement (if provided)."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "unmatched",
+        "suggested",
+        "matched",
+        "ignored"
+      ],
+      "default": "unmatched",
+      "description": "unmatched = no link; suggested = possible match awaiting user confirmation; matched = linked to a transaction; ignored = formally skipped with a recorded reason."
+    },
+    "matched_transaction_id": {
+      "type": "string",
+      "description": "The FinanceTransaction this line is reconciled to (set on match)."
+    },
+    "suggested_transaction_id": {
+      "type": "string",
+      "description": "Top suggested match (preview only \u2014 requires user confirmation before it becomes a real match)."
+    },
+    "suggestion_confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "Confidence of the top suggestion."
+    },
+    "ignore_reason": {
+      "type": "string",
+      "description": "Mandatory reason recorded when a line is formally ignored. Required for the reconciliation to be marked Reconciled."
+    },
+    "raw_hash": {
+      "type": "string",
+      "description": "Hash of date+amount+description for duplicate detection."
+    },
+    "is_duplicate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flagged as a duplicate within the import batch."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Records are separated by data mode. demo = fictional sample data; live = real organisation data."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "reconciliation_id",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

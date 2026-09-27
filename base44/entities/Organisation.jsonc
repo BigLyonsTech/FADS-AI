@@ -1,0 +1,192 @@
+{
+  "name": "Organisation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "small_business",
+        "taxi_driver",
+        "self_employed",
+        "school",
+        "university",
+        "church"
+      ]
+    },
+    "faith_type": {
+      "type": "string",
+      "enum": [
+        "church",
+        "mosque",
+        "ministry",
+        "faith_organisation",
+        "religious_organisation",
+        "other"
+      ],
+      "description": "For church-type workspaces: the specific faith community type. Optional \u2014 defaults to 'church'. All faith types share the same workspace architecture."
+    },
+    "faith_type_other": {
+      "type": "string",
+      "description": "Custom description when faith_type is 'other'."
+    },
+    "terminology": {
+      "type": "object",
+      "description": "Custom terminology for faith/community workspaces. Each key stores the organisation's preferred label. Missing keys fall back to neutral defaults. Stored at org level so each organisation can use different terminology.",
+      "properties": {
+        "people": {
+          "type": "string",
+          "description": "Label for people: Members, Congregation, Community, Attendees, or a custom term."
+        },
+        "leader": {
+          "type": "string",
+          "description": "Label for organisation leader: Pastor, Priest, Minister, Imam, Leader, Administrator, or custom."
+        },
+        "giving": {
+          "type": "string",
+          "description": "Label for financial contributions: Giving, Donations, Tithes & Offerings, Contributions, or custom."
+        },
+        "gatherings": {
+          "type": "string",
+          "description": "Label for gatherings: Services, Meetings, Worship, Events, Gatherings, or custom."
+        },
+        "volunteers": {
+          "type": "string",
+          "description": "Label for people helping the organisation: Volunteers, Team, Workers, Ministry Team, or custom."
+        }
+      },
+      "default": {}
+    },
+    "country": {
+      "type": "string",
+      "enum": [
+        "NG",
+        "IE",
+        "GB",
+        "FR",
+        "US"
+      ]
+    },
+    "region": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string",
+      "description": "Postal address used on invoices and receipts."
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone shown on invoices and receipts."
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email shown on invoices and receipts."
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Organisation logo (placeholder for future upload)."
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "NGN",
+        "EUR",
+        "GBP",
+        "USD"
+      ]
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "financial_year_start": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12,
+      "default": 1
+    },
+    "tax_regime": {
+      "type": "string",
+      "enum": [
+        "none",
+        "vat",
+        "sales_tax",
+        "gst",
+        "custom"
+      ],
+      "default": "none"
+    },
+    "tax_label": {
+      "type": "string",
+      "default": "Tax"
+    },
+    "default_tax_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "tax_id_label": {
+      "type": "string"
+    },
+    "tax_id_value": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "demo"
+    },
+    "data_isolation_strict": {
+      "type": "boolean",
+      "default": true
+    },
+    "access_status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "active",
+        "paused",
+        "cancelled"
+      ],
+      "default": "trial"
+    },
+    "owner_user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "country",
+    "currency",
+    "timezone",
+    "data_mode",
+    "access_status",
+    "owner_user_id"
+  ],
+  "rls": {
+    "read": {
+      "id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "name": "FinanceContact",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "customer",
+        "parent",
+        "member",
+        "donor",
+        "supplier",
+        "other"
+      ],
+      "description": "Adapts by org type: customer (business), parent (school), member/donor (church), supplier (money-out)."
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Records are separated by data mode. demo = fictional sample data; live = real organisation data."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "kind",
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

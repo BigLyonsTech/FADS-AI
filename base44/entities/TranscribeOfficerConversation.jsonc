@@ -1,0 +1,175 @@
+{
+  "name": "TranscribeOfficerConversation",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Owning user. Enforced by RLS."
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "officer"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "transcript",
+                    "decision",
+                    "action_point",
+                    "report"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "passage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "label",
+                "url"
+              ]
+            },
+            "default": []
+          },
+          "period_note": {
+            "type": "string"
+          },
+          "insufficient_data": {
+            "type": "boolean",
+            "default": false
+          },
+          "action_type": {
+            "type": "string",
+            "description": "For action messages: find_decisions, find_action_points, compare_themes, draft_briefing, draft_agenda, draft_minutes."
+          },
+          "filters": {
+            "type": "object",
+            "description": "Filters applied when the question was asked."
+          }
+        },
+        "required": [
+          "role",
+          "content",
+          "timestamp"
+        ]
+      },
+      "default": []
+    },
+    "saved_drafts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "draft_id": {
+            "type": "string"
+          },
+          "draft_type": {
+            "type": "string",
+            "enum": [
+              "briefing",
+              "agenda",
+              "minutes",
+              "answer"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "saved_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "draft_id",
+          "draft_type",
+          "title",
+          "content",
+          "saved_date"
+        ]
+      },
+      "default": []
+    },
+    "current_month_key": {
+      "type": "string",
+      "description": "YYYY-MM for usage tracking. Resets count when month changes."
+    },
+    "current_month_count": {
+      "type": "integer",
+      "default": 0,
+      "description": "Questions asked in the current month."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "user_id",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.user_id": "{{user.id}}"
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

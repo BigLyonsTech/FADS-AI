@@ -1,0 +1,84 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "sender_id": {
+      "type": "string",
+      "description": "User id of the sender."
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Snapshot of sender name for display."
+    },
+    "recipient_id": {
+      "type": "string",
+      "description": "User id of the recipient (a member of the same organisation)."
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Snapshot of recipient name for display."
+    },
+    "subject": {
+      "type": "string",
+      "description": "Optional subject / title."
+    },
+    "body": {
+      "type": "string",
+      "description": "Message content."
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the recipient has read the message."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "sender_id",
+    "recipient_id",
+    "body",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.recipient_id": "{{user.id}}"
+        },
+        {
+          "data.sender_id": "{{user.id}}"
+        }
+      ]
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.recipient_id": "{{user.id}}"
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.recipient_id": "{{user.id}}"
+        },
+        {
+          "data.sender_id": "{{user.id}}"
+        }
+      ]
+    }
+  }
+}

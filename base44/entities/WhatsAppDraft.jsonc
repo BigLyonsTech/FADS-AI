@@ -1,0 +1,60 @@
+{
+  "name": "WhatsAppDraft",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "CRMContact this draft is for."
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Snapshot of contact name for display."
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Snapshot of contact phone for display."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Optional AI drafting purpose saved with the draft."
+    },
+    "body": {
+      "type": "string",
+      "description": "Saved message text."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "contact_id",
+    "body",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

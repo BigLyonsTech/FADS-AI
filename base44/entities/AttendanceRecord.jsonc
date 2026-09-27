@@ -1,0 +1,94 @@
+{
+  "name": "AttendanceRecord",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this record belongs to."
+    },
+    "employee_name": {
+      "type": "string",
+      "description": "Snapshot of employee name for display."
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Attendance date."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "present",
+        "absent",
+        "late",
+        "remote",
+        "excused"
+      ],
+      "default": "present",
+      "description": "present = at work; absent = did not attend; late = arrived after scheduled start; remote = working remotely; excused = authorised absence (leave, holiday, training)."
+    },
+    "check_in_time": {
+      "type": "string",
+      "description": "Check-in time (HH:MM format). Optional."
+    },
+    "check_out_time": {
+      "type": "string",
+      "description": "Check-out time (HH:MM format). Optional."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Brief note. Minimised \u2014 no surveillance or medical details."
+    },
+    "recorded_by": {
+      "type": "string",
+      "description": "User ID of the person who recorded this attendance."
+    },
+    "recorded_by_name": {
+      "type": "string"
+    },
+    "recorded_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "date",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

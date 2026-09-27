@@ -1,0 +1,47 @@
+{
+  "description": "Sends renewal reminder emails at least 24 hours before the first regular charge after a trial ends",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 9 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/Dublin",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "renewal_reminders",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_reminders": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "subscription",
+            "args": {
+              "action": "send_renewal_reminders"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send renewal reminders",
+            "description": "Emails users 24h before trial ends"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Renewal Reminders"
+}

@@ -1,0 +1,87 @@
+{
+  "name": "LeavePolicy",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "name": {
+      "type": "string",
+      "description": "Policy name e.g. Full-time Staff, Part-time Staff."
+    },
+    "description": {
+      "type": "string"
+    },
+    "applicable_contract_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Contract types this policy applies to (permanent, fixed_term, part_time, etc.)."
+    },
+    "allowances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "leave_type_id": {
+            "type": "string"
+          },
+          "leave_type_name": {
+            "type": "string"
+          },
+          "annual_allowance": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "leave_type_id",
+          "annual_allowance"
+        ]
+      },
+      "default": [],
+      "description": "Per-leave-type annual allowances for this policy."
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "is_active"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

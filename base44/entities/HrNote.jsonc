@@ -1,0 +1,66 @@
+{
+  "name": "HrNote",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this note relates to."
+    },
+    "content": {
+      "type": "string",
+      "description": "Note body. Restricted \u2014 visible only to HR-authorised roles."
+    },
+    "is_restricted": {
+      "type": "boolean",
+      "default": true,
+      "description": "True = HR-only visibility. False = manager + HR visibility (future)."
+    },
+    "created_by": {
+      "type": "string",
+      "description": "User ID of the note author."
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Author display name snapshot."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "content"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

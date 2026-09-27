@@ -1,0 +1,68 @@
+{
+  "name": "EmergencyContact",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this contact belongs to."
+    },
+    "name": {
+      "type": "string"
+    },
+    "relationship": {
+      "type": "string",
+      "description": "Relationship to employee e.g. Spouse, Parent, Sibling."
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "name",
+    "phone"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

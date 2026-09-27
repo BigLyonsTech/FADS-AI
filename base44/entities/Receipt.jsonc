@@ -1,0 +1,121 @@
+{
+  "name": "Receipt",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "receipt_number": {
+      "type": "string",
+      "description": "Auto-generated org-specific number (e.g. RCT-2026-0001)."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "payment",
+        "donation",
+        "tithe",
+        "offering",
+        "school_fee",
+        "general"
+      ],
+      "default": "payment",
+      "description": "Adapts by org type: payment (business), school_fee (school), donation/tithe/offering (church)."
+    },
+    "invoice_id": {
+      "type": "string",
+      "description": "Set when receipt is for an invoice payment."
+    },
+    "invoice_payment_id": {
+      "type": "string"
+    },
+    "finance_transaction_id": {
+      "type": "string",
+      "description": "Underlying Money In transaction."
+    },
+    "payer_name": {
+      "type": "string"
+    },
+    "payer_email": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Denormalised from org at creation."
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "cash",
+        "bank_transfer",
+        "card",
+        "mobile_money",
+        "cheque",
+        "other"
+      ],
+      "default": "cash"
+    },
+    "description": {
+      "type": "string",
+      "description": "What the receipt is for."
+    },
+    "reference": {
+      "type": "string"
+    },
+    "org_snapshot": {
+      "type": "object",
+      "description": "Org name/address/tax info snapshot at creation for PDF."
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Placeholder for future org logo."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Records are separated by data mode. demo = fictional sample data; live = real organisation data."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "receipt_number",
+    "kind",
+    "amount",
+    "currency",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

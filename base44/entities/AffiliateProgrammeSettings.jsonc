@@ -1,0 +1,99 @@
+{
+  "name": "AffiliateProgrammeSettings",
+  "type": "object",
+  "properties": {
+    "singleton_key": {
+      "type": "string",
+      "description": "Always 'global' \u2014 enforces a single settings record."
+    },
+    "default_commission_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount"
+      ],
+      "default": "percentage"
+    },
+    "default_commission_value": {
+      "type": "number",
+      "default": 30,
+      "description": "Suggested default: 30% recurring partner commission. Editable by Platform Owner. For the Nigerian \u20a630,000/month plan this yields \u20a69,000 per successful paid month."
+    },
+    "default_commission_frequency": {
+      "type": "string",
+      "enum": [
+        "recurring",
+        "one_time"
+      ],
+      "default": "recurring"
+    },
+    "supported_countries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "NG",
+        "IE",
+        "GB",
+        "FR",
+        "US"
+      ]
+    },
+    "default_payout_currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "terms_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "is_programme_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "min_payout_amount": {
+      "type": "number",
+      "default": 50,
+      "description": "Minimum approved commission balance required to request a payout."
+    },
+    "payout_methods": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "bank_transfer",
+        "paypal"
+      ]
+    },
+    "updated_by": {
+      "type": "string"
+    },
+    "updated_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "singleton_key"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

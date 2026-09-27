@@ -1,0 +1,103 @@
+{
+  "name": "PaymentEvent",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side from the subscription."
+    },
+    "subscription_id": {
+      "type": "string"
+    },
+    "payment_provider": {
+      "type": "string",
+      "enum": [
+        "stripe",
+        "hba",
+        "paystack",
+        "manual"
+      ],
+      "default": "stripe",
+      "description": "Provider that reported this event."
+    },
+    "stripe_event_id": {
+      "type": "string",
+      "description": "Stripe event ID for idempotency \u2014 duplicate events are skipped. For non-Stripe providers, use provider_event_id instead."
+    },
+    "provider_event_id": {
+      "type": "string",
+      "description": "Provider-agnostic event/reference id for idempotency (Paystack reference, HBA transaction id, etc.). Used together with payment_provider to dedupe external events."
+    },
+    "provider_customer_reference": {
+      "type": "string",
+      "description": "Provider-agnostic customer reference (Paystack customer code, HBA customer id)."
+    },
+    "provider_subscription_reference": {
+      "type": "string",
+      "description": "Provider-agnostic subscription/reference code (Paystack subscription code, HBA mandate id)."
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Event type: Stripe types (checkout.session.completed, invoice.payment_succeeded, ...) or external provider types (payment.success, subscription.cancelled, ...)."
+    },
+    "stripe_customer_id": {
+      "type": "string"
+    },
+    "stripe_invoice_id": {
+      "type": "string"
+    },
+    "stripe_payment_intent_id": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Amount in major currency units (not cents)."
+    },
+    "currency": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "description": "Event status (e.g. paid, failed, succeeded, cancelled)."
+    },
+    "billing_reason": {
+      "type": "string",
+      "description": "billing_reason: subscription_create, subscription_cycle, etc."
+    },
+    "processed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this event was successfully processed."
+    },
+    "processed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "event_type"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

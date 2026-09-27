@@ -1,0 +1,82 @@
+{
+  "name": "WorkSchedule",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "name": {
+      "type": "string",
+      "description": "Schedule name e.g. Standard 9-5, Shift Work."
+    },
+    "description": {
+      "type": "string"
+    },
+    "working_days": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 6
+      },
+      "default": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "description": "Days of week that are working days (0=Sunday, 1=Monday, ..., 6=Saturday)."
+    },
+    "start_time": {
+      "type": "string",
+      "default": "09:00",
+      "description": "Scheduled start time (HH:MM)."
+    },
+    "end_time": {
+      "type": "string",
+      "default": "17:00",
+      "description": "Scheduled end time (HH:MM)."
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "is_active"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

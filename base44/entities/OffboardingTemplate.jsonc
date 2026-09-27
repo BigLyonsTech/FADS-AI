@@ -1,0 +1,105 @@
+{
+  "name": "OffboardingTemplate",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "name": {
+      "type": "string",
+      "description": "Template name e.g. Standard Offboarding, Remote Staff Offboarding."
+    },
+    "description": {
+      "type": "string"
+    },
+    "org_type": {
+      "type": "string",
+      "enum": [
+        "small_business",
+        "school",
+        "church"
+      ]
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "final_date",
+              "equipment_return",
+              "access_revocation",
+              "document_handover",
+              "hr_actions",
+              "archival",
+              "other"
+            ]
+          },
+          "default_due_days": {
+            "type": "integer",
+            "default": 0,
+            "description": "Default days from the offboarding start to complete this task."
+          },
+          "requires_confirmation": {
+            "type": "boolean",
+            "default": false,
+            "description": "True if this task requires explicit confirmation (e.g. system access revocation)."
+          }
+        },
+        "required": [
+          "title",
+          "category"
+        ]
+      },
+      "default": []
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "org_type"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

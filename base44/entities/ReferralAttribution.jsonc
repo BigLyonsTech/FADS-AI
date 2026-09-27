@@ -1,0 +1,112 @@
+{
+  "name": "ReferralAttribution",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Affiliate's user ID for RLS isolation."
+    },
+    "affiliate_id": {
+      "type": "string",
+      "description": "The affiliate who referred this organisation."
+    },
+    "referred_user_id": {
+      "type": "string",
+      "description": "The user who signed up with the referral code."
+    },
+    "referred_organisation_id": {
+      "type": "string",
+      "description": "The organisation created by the referred user."
+    },
+    "referred_organisation_name": {
+      "type": "string",
+      "description": "Privacy-safe snapshot \u2014 name only, no financial data exposed to affiliate."
+    },
+    "referred_organisation_status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "active",
+        "paused",
+        "cancelled"
+      ],
+      "description": "Snapshot of org access_status for affiliate dashboard display."
+    },
+    "code_used": {
+      "type": "string",
+      "description": "The referral code that was used."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "corrected"
+      ],
+      "default": "active",
+      "description": "active = locked attribution; corrected = replaced by admin correction."
+    },
+    "attributed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "corrected_by": {
+      "type": "string",
+      "description": "Platform Owner user ID who corrected this attribution."
+    },
+    "corrected_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "correction_reason": {
+      "type": "string",
+      "description": "Mandatory reason for the correction."
+    },
+    "corrected_to_affiliate_id": {
+      "type": "string",
+      "description": "The new affiliate this org was re-assigned to."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "user_id",
+    "affiliate_id",
+    "referred_organisation_id",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

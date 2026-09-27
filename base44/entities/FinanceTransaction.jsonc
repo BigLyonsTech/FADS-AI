@@ -1,0 +1,151 @@
+{
+  "name": "FinanceTransaction",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "in",
+        "out"
+      ],
+      "description": "in = money received, out = money spent."
+    },
+    "account_id": {
+      "type": "string"
+    },
+    "category_id": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Gross amount in the transaction's stored currency. No automatic FX conversion is applied."
+    },
+    "currency": {
+      "type": "string",
+      "description": "Transaction currency snapshot. Defaults to the organisation currency when not explicitly supplied and remains immutable for history."
+    },
+    "tax_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Tax rate (%) applied, denormalised from org default at creation."
+    },
+    "tax_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "tax_label": {
+      "type": "string"
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "Customer/parent/member/donor (in) or supplier (out)."
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "inventory_item_id": {
+      "type": "string",
+      "description": "Optional explicit InventoryItem link for a Small Business direct sale."
+    },
+    "inventory_quantity": {
+      "type": "number",
+      "description": "Optional quantity sold for an explicitly inventory-linked direct sale."
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "cash",
+        "bank_transfer",
+        "card",
+        "mobile_money",
+        "cheque",
+        "other"
+      ],
+      "default": "cash"
+    },
+    "internal_notes": {
+      "type": "string",
+      "description": "Private staff notes, not shown on customer-facing documents."
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false,
+      "description": "Indicator that the entry recurs. Recurrence is NOT automated yet."
+    },
+    "recurring_frequency": {
+      "type": "string",
+      "description": "Free-text note e.g. weekly, monthly. Indicator only; recurrence is not automated."
+    },
+    "receipt_file_url": {
+      "type": "string",
+      "description": "Primary receipt file URL (uploaded via UploadFile)."
+    },
+    "attachment_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Supporting file attachment URLs."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "cleared",
+        "pending",
+        "cancelled"
+      ],
+      "default": "cleared"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Records are separated by data mode. demo = fictional sample data; live = real organisation data."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "direction",
+    "account_id",
+    "amount",
+    "currency",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

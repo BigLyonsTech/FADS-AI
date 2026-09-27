@@ -1,0 +1,73 @@
+{
+  "name": "CanvaTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Template name shown to customers."
+    },
+    "preview_url": {
+      "type": "string",
+      "description": "Preview / thumbnail image URL."
+    },
+    "canva_url": {
+      "type": "string",
+      "description": "Canva template share URL (deliberately configured by FADS admin). Must be a public share/template URL, never a private design/edit URL."
+    },
+    "workspace": {
+      "type": "string",
+      "enum": [
+        "small_business",
+        "school",
+        "university",
+        "church",
+        "all"
+      ],
+      "default": "all",
+      "description": "Which workspace type this template is for. 'all' = visible to all workspaces."
+    },
+    "category": {
+      "type": "string",
+      "description": "Template category: Social Post, Story, Reel/Video, Flyer/Poster, Sale/Offer, Event, Announcement, Education."
+    },
+    "content_type": {
+      "type": "string",
+      "description": "Related content type key for recommendations: social_post, reel_idea, caption, email, whatsapp, short_message, direct_message, flyer."
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Featured templates appear first in the gallery."
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Only active templates are shown to customers."
+    }
+  },
+  "required": [
+    "name",
+    "canva_url",
+    "workspace",
+    "category",
+    "active"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "name": "WorkflowRun",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "template_id": {
+      "type": "string",
+      "description": "Template that was run."
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Snapshot of template name for display."
+    },
+    "category": {
+      "type": "string",
+      "description": "Template category for display."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "waiting_for_approval",
+        "completed",
+        "paused",
+        "failed"
+      ],
+      "default": "active",
+      "description": "active = running/started; waiting_for_approval = prepared, awaiting user approval; completed = done; paused = user paused; failed = error."
+    },
+    "started_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the run was started."
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the run was completed."
+    },
+    "actions_prepared": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Actions FADS prepared for this run."
+    },
+    "actions_approved": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Actions the user approved."
+    },
+    "actions_completed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Actions that were completed."
+    },
+    "related_entity_type": {
+      "type": "string",
+      "description": "Related entity type: invoice, contact, employee, product, transcript, etc."
+    },
+    "related_entity_id": {
+      "type": "string",
+      "description": "Related entity ID if applicable."
+    },
+    "related_entity_label": {
+      "type": "string",
+      "description": "Related entity label for display (customer name, product name, etc.)."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief summary of what the run found or did."
+    },
+    "started_by": {
+      "type": "string",
+      "description": "User id who started the run."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "template_id",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

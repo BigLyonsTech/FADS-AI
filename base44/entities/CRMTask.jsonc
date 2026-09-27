@@ -1,0 +1,132 @@
+{
+  "name": "CRMTask",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "task",
+        "follow_up",
+        "appointment",
+        "reminder",
+        "call",
+        "email"
+      ],
+      "default": "task",
+      "description": "task = general to-do; follow_up = check-in; appointment = scheduled meeting; reminder = in-app reminder; call = phone call; email = email to send."
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "contact_id": {
+      "type": "string"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Snapshot of contact name for display."
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "related_task_id": {
+      "type": "string",
+      "description": "Optional related CRMTask, used by reminders to link to an appointment or business task."
+    },
+    "automation_id": {
+      "type": "string",
+      "description": "PipelineAutomation that created this task/reminder, when applicable."
+    },
+    "automation_event_key": {
+      "type": "string",
+      "description": "Source automation event key used to prevent duplicate rule-generated tasks/reminders."
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "due_time": {
+      "type": "string",
+      "description": "Optional due/start time for reminders, tasks and appointments."
+    },
+    "end_time": {
+      "type": "string",
+      "description": "For appointments: end time."
+    },
+    "location": {
+      "type": "string",
+      "description": "For appointments."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "done",
+        "cancelled"
+      ],
+      "default": "open"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "assigned_user_id": {
+      "type": "string"
+    },
+    "assigned_user_name": {
+      "type": "string"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "type",
+    "title",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "FinanceOfficerOrgConfig",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation."
+    },
+    "organisation_name": {
+      "type": "string",
+      "description": "Snapshot for admin display."
+    },
+    "is_enabled_override": {
+      "type": "boolean",
+      "description": "null = use global default. true/false overrides global enabled status."
+    },
+    "monthly_allowance_override": {
+      "type": "integer",
+      "description": "null = use global default. Overrides the global monthly question allowance."
+    },
+    "updated_by": {
+      "type": "string"
+    },
+    "updated_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "organisation_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.organisation_id": {
+            "$in": "{{user.data.authorised_organisations}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

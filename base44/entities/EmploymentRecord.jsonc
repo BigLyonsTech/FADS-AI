@@ -1,0 +1,99 @@
+{
+  "name": "EmploymentRecord",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this record belongs to."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "hired",
+        "status_change",
+        "role_change",
+        "department_change",
+        "manager_change",
+        "leave_start",
+        "leave_end",
+        "offboarding_started",
+        "offboarding_completed",
+        "rehired"
+      ],
+      "description": "Lifecycle event type."
+    },
+    "from_status": {
+      "type": "string"
+    },
+    "to_status": {
+      "type": "string"
+    },
+    "from_job_role_id": {
+      "type": "string"
+    },
+    "to_job_role_id": {
+      "type": "string"
+    },
+    "from_department_id": {
+      "type": "string"
+    },
+    "to_department_id": {
+      "type": "string"
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "recorded_by": {
+      "type": "string",
+      "description": "User ID of the person who recorded this event."
+    },
+    "recorded_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "event_type",
+    "effective_date"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

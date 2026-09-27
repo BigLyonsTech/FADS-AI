@@ -1,0 +1,77 @@
+{
+  "name": "WorkflowTemplate",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "template_id": {
+      "type": "string",
+      "description": "Static template identifier from the curated library (e.g. 'collect_overdue_money')."
+    },
+    "category": {
+      "type": "string",
+      "description": "Template category: Daily, Money, Customers, HR, Inventory, Meetings, Tax, School, Church."
+    },
+    "name": {
+      "type": "string",
+      "description": "Snapshot of template name for display."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused"
+      ],
+      "default": "active",
+      "description": "active = user has activated this template; paused = user temporarily paused it."
+    },
+    "config": {
+      "type": "object",
+      "description": "Optional per-template configuration (e.g. { inactiveDays: 90 }).",
+      "properties": {},
+      "default": {}
+    },
+    "activated_by": {
+      "type": "string",
+      "description": "User id who activated the template."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "template_id",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

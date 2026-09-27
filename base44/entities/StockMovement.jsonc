@@ -1,0 +1,80 @@
+{
+  "name": "StockMovement",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "item_id": {
+      "type": "string",
+      "description": "InventoryItem this movement affects."
+    },
+    "item_name": {
+      "type": "string",
+      "description": "Snapshot of item name for display."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "stock_in",
+        "stock_out",
+        "adjustment"
+      ],
+      "description": "stock_in = receive stock; stock_out = issue/sell stock; adjustment = correction (quantity may be negative)."
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Units moved. For stock_out this is a positive number that reduces stock; for adjustment it may be negative."
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Optional reference e.g. PO number, invoice, recipient."
+    },
+    "note": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "item_id",
+    "type",
+    "quantity",
+    "date",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

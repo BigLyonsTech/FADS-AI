@@ -1,0 +1,119 @@
+{
+  "name": "SchoolReportCard",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "student_contact_id": {
+      "type": "string",
+      "description": "CRMContact (contact_type student) this report card is for. Optional."
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Student name snapshot for display."
+    },
+    "class_name": {
+      "type": "string",
+      "description": "Class / grade / form name."
+    },
+    "academic_term": {
+      "type": "string",
+      "description": "Academic period e.g. 'Term 1'."
+    },
+    "academic_year": {
+      "type": "string",
+      "description": "Academic year e.g. '2026/2027'."
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "mark": {
+            "type": "number",
+            "description": "Numeric mark/score."
+          },
+          "grade": {
+            "type": "string",
+            "description": "Letter grade e.g. A, B+."
+          },
+          "teacher_comment": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "attendance_summary": {
+      "type": "object",
+      "properties": {
+        "present": {
+          "type": "integer",
+          "default": 0
+        },
+        "absent": {
+          "type": "integer",
+          "default": 0
+        },
+        "late": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "default": {}
+    },
+    "overall_comment": {
+      "type": "string",
+      "description": "Teacher's overall comment for the term."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published"
+      ],
+      "default": "draft"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "student_name",
+    "academic_term",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

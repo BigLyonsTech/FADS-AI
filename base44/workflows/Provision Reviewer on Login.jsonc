@@ -1,0 +1,41 @@
+{
+  "name": "Provision Reviewer on Login",
+  "description": "Auto-links pre-created active demo-workspace memberships to the Google Play reviewer on login, so they have instant access without accepting invitations.",
+  "trigger": {
+    "config": {
+      "trigger_type": "app_user_auth",
+      "events": [
+        "signup",
+        "login"
+      ]
+    },
+    "condition": "${ .trigger.email == \"review@thefadsai.com\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "provision_reviewer_on_login",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "provision": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "provisionReviewer",
+            "args": {
+              "user_id": "${ .trigger.user_id }",
+              "email": "${ .trigger.email }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Provision reviewer access",
+            "description": "Link demo memberships + sync org access"
+          }
+        }
+      }
+    ]
+  }
+}

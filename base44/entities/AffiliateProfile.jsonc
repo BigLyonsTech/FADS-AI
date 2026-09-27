@@ -1,0 +1,153 @@
+{
+  "name": "AffiliateProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The affiliate's user account ID. Used for RLS isolation."
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "active",
+        "paused",
+        "closed",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Application lifecycle: pending \u2192 approved/active \u2192 paused/closed. Rejected = application declined."
+    },
+    "affiliate_code": {
+      "type": "string",
+      "description": "Unique referral code generated on approval. Null until approved."
+    },
+    "country": {
+      "type": "string",
+      "description": "Affiliate's country for payout eligibility."
+    },
+    "payout_currency": {
+      "type": "string",
+      "description": "Currency for commission and payout calculations."
+    },
+    "commission_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount"
+      ],
+      "description": "Inherited from programme settings at approval; editable per affiliate."
+    },
+    "commission_value": {
+      "type": "number",
+      "description": "Percentage (e.g. 20) or fixed amount in payout currency."
+    },
+    "commission_frequency": {
+      "type": "string",
+      "enum": [
+        "recurring",
+        "one_time"
+      ],
+      "description": "Recurring = commission on each conversion; one_time = single commission."
+    },
+    "applied_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Platform Owner user ID who approved."
+    },
+    "paused_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "closed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "total_signups": {
+      "type": "integer",
+      "default": 0,
+      "description": "Denormalized count of referred organisations."
+    },
+    "total_conversions": {
+      "type": "integer",
+      "default": 0,
+      "description": "Denormalized count of organisations with verified conversions."
+    },
+    "total_pending_commission": {
+      "type": "number",
+      "default": 0
+    },
+    "total_approved_commission": {
+      "type": "number",
+      "default": 0
+    },
+    "total_paid_commission": {
+      "type": "number",
+      "default": 0
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Demo records are fictional seed data; live records are real affiliates."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Platform Owner internal notes."
+    }
+  },
+  "required": [
+    "user_id",
+    "user_email",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

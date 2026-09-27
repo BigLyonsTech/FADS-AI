@@ -1,0 +1,102 @@
+{
+  "name": "AutomationRun",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "automation_id": {
+      "type": "string",
+      "description": "PipelineAutomation rule that fired. May be empty for FADS-suggested actions without a saved rule."
+    },
+    "rule_name": {
+      "type": "string",
+      "description": "Snapshot of the rule name for display."
+    },
+    "event_key": {
+      "type": "string",
+      "description": "Persisted idempotency key for the source event + rule. Repeated processing checks this before creating another action."
+    },
+    "source_task_id": {
+      "type": "string",
+      "description": "Appointment/reminder/follow-up CRMTask that caused this rule to run, when applicable."
+    },
+    "trigger_type": {
+      "type": "string",
+      "description": "Snapshot of the trigger type that fired."
+    },
+    "action_type": {
+      "type": "string",
+      "description": "Snapshot of the action type that was prepared/performed."
+    },
+    "action_label": {
+      "type": "string",
+      "description": "Human-readable summary of the action (e.g. 'Follow-up created for tomorrow', 'WhatsApp prepared')."
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "CRMContact affected."
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Snapshot of contact name for display."
+    },
+    "lead_id": {
+      "type": "string",
+      "description": "CRMLead affected, if any."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "ready",
+        "sent",
+        "failed",
+        "skipped"
+      ],
+      "default": "ready",
+      "description": "draft = prepared, awaiting owner review; ready = prepared and ready for the owner to action; sent = owner confirmed the communication was sent (provider-confirmed for email); failed = something went wrong; skipped = contact excluded (opt-out, missing phone/email, inactive). Never 'sent' unless the provider confirms success."
+    },
+    "detail": {
+      "type": "string",
+      "description": "Optional extra detail (e.g. skip reason, task title, template category)."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "action_type",
+    "status",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

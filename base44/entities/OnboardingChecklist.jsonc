@@ -1,0 +1,142 @@
+{
+  "name": "OnboardingChecklist",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this checklist belongs to."
+    },
+    "template_id": {
+      "type": "string",
+      "description": "OnboardingTemplate ID this checklist was created from."
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Snapshot of template name for display."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "completed",
+        "skipped"
+      ],
+      "default": "not_started"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "information",
+              "documentation",
+              "contract",
+              "assignment",
+              "policy",
+              "equipment",
+              "induction",
+              "start_date",
+              "other"
+            ]
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "User ID of the person responsible for this task."
+          },
+          "owner_name": {
+            "type": "string"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "is_completed": {
+            "type": "boolean",
+            "default": false
+          },
+          "completed_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "completed_by": {
+            "type": "string",
+            "description": "User ID of the person who completed this task."
+          },
+          "completed_by_name": {
+            "type": "string"
+          },
+          "evidence_notes": {
+            "type": "string",
+            "description": "Notes recorded as completion evidence."
+          },
+          "evidence_file_uri": {
+            "type": "string",
+            "description": "Private file URI of supporting evidence."
+          }
+        },
+        "required": [
+          "title",
+          "category"
+        ]
+      },
+      "default": []
+    },
+    "started_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "name": "Employee",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "first_name": {
+      "type": "string",
+      "description": "Employee first name."
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Employee last name."
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Work email address."
+    },
+    "personal_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Personal email. Restricted field \u2014 visible only to HR-authorised roles."
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number."
+    },
+    "department_id": {
+      "type": "string",
+      "description": "Department the employee belongs to."
+    },
+    "job_role_id": {
+      "type": "string",
+      "description": "Job role / title."
+    },
+    "manager_id": {
+      "type": "string",
+      "description": "Reporting manager (another Employee ID)."
+    },
+    "work_location_id": {
+      "type": "string",
+      "description": "Primary work location."
+    },
+    "employment_status": {
+      "type": "string",
+      "enum": [
+        "onboarding",
+        "active",
+        "on_leave",
+        "offboarding",
+        "former_employee",
+        "inactive"
+      ],
+      "default": "onboarding",
+      "description": "Current lifecycle status."
+    },
+    "contract_type": {
+      "type": "string",
+      "enum": [
+        "permanent",
+        "fixed_term",
+        "part_time",
+        "temporary",
+        "intern",
+        "casual"
+      ],
+      "default": "permanent"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Employment start date."
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Employment end date (set on offboarding/exit)."
+    },
+    "annual_salary": {
+      "type": "number",
+      "description": "Annual salary/benefit figure. Restricted field \u2014 visible only to HR-authorised roles."
+    },
+    "salary_currency": {
+      "type": "string"
+    },
+    "pay_frequency": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "bi_weekly",
+        "weekly"
+      ],
+      "default": "monthly",
+      "description": "Pay frequency used by Payroll V1."
+    },
+    "pay_basic": {
+      "type": "number",
+      "default": 0,
+      "description": "Basic pay per pay period (Payroll V1). HR-restricted via RLS."
+    },
+    "pay_allowances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "default": 0
+          }
+        }
+      },
+      "default": [],
+      "description": "Optional recurring allowances per pay period."
+    },
+    "pay_deductions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "default": 0
+          }
+        }
+      },
+      "default": [],
+      "description": "Optional recurring deductions per pay period."
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of birth. Restricted field \u2014 visible only to HR-authorised roles."
+    },
+    "home_address": {
+      "type": "string",
+      "description": "Home address. Restricted field \u2014 visible only to HR-authorised roles."
+    },
+    "profile_photo_url": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "first_name",
+    "last_name",
+    "employment_status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

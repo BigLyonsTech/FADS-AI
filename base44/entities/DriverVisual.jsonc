@@ -1,0 +1,56 @@
+{
+  "name": "DriverVisual",
+  "type": "object",
+  "properties": {
+    "image_url": {
+      "type": "string",
+      "description": "Approved FADS Driver visual \u2014 the consistent FADS robot with a vehicle/scene. Stored asset URL (media.base44.com). The FADS robot identity stays consistent across all visuals; only the vehicle/scene varies."
+    },
+    "title": {
+      "type": "string",
+      "description": "Display title e.g. 'City Taxi', 'Electric Taxi'."
+    },
+    "vehicle_type": {
+      "type": "string",
+      "description": "Vehicle/scene type e.g. modern_taxi, ev_taxi, black_cab, private_hire, everyday_car, other."
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Only active visuals are eligible for rotation on Driver screens."
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Featured visuals are preferred in rotation."
+    },
+    "sort_order": {
+      "type": "integer",
+      "default": 0,
+      "description": "Lower sorts first."
+    }
+  },
+  "required": [
+    "image_url",
+    "title",
+    "active"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

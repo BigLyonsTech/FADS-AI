@@ -1,0 +1,120 @@
+{
+  "name": "Reconciliation",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "account_id": {
+      "type": "string",
+      "description": "FinanceAccount being reconciled."
+    },
+    "account_name": {
+      "type": "string",
+      "description": "Snapshot of account name at creation."
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Statement period start date."
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Statement period end date."
+    },
+    "opening_balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Statement opening balance."
+    },
+    "closing_balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Statement closing balance."
+    },
+    "currency": {
+      "type": "string",
+      "description": "Denormalised from organisation at creation."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "in_progress",
+        "completed"
+      ],
+      "default": "in_progress"
+    },
+    "imported_count": {
+      "type": "integer",
+      "default": 0,
+      "description": "Total statement lines imported."
+    },
+    "matched_count": {
+      "type": "integer",
+      "default": 0,
+      "description": "Lines matched to a finance transaction."
+    },
+    "difference": {
+      "type": "number",
+      "default": 0,
+      "description": "Closing balance minus computed balance from lines."
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Text summary generated on completion."
+    },
+    "created_by_id": {
+      "type": "string"
+    },
+    "created_by_email": {
+      "type": "string"
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live",
+      "description": "Records are separated by data mode. demo = fictional sample data; live = real organisation data."
+    }
+  },
+  "required": [
+    "organisation_id",
+    "account_id",
+    "period_start",
+    "period_end",
+    "opening_balance",
+    "closing_balance",
+    "currency",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

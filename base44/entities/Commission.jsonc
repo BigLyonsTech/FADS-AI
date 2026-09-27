@@ -1,0 +1,139 @@
+{
+  "name": "Commission",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Affiliate's user ID for RLS isolation."
+    },
+    "affiliate_id": {
+      "type": "string"
+    },
+    "attribution_id": {
+      "type": "string",
+      "description": "The ReferralAttribution this commission belongs to."
+    },
+    "organisation_id": {
+      "type": "string",
+      "description": "The referred organisation that generated this commission."
+    },
+    "organisation_name": {
+      "type": "string",
+      "description": "Privacy-safe snapshot."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount"
+      ]
+    },
+    "value": {
+      "type": "number",
+      "description": "Percentage or fixed amount used for this commission."
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "recurring",
+        "one_time"
+      ]
+    },
+    "amount": {
+      "type": "number",
+      "description": "Calculated commission amount in the affiliate's payout currency."
+    },
+    "currency": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "paid",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "is_manually_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when recorded manually during beta, labelled 'Manually verified'."
+    },
+    "verified_by": {
+      "type": "string",
+      "description": "Platform Owner who verified this conversion."
+    },
+    "verified_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "description": {
+      "type": "string"
+    },
+    "conversion_reference": {
+      "type": "string",
+      "description": "Reference for the conversion (invoice number, manual reference, etc.)."
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "paid_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "payout_id": {
+      "type": "string",
+      "description": "PayoutRecord ID when this commission is included in a payout."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "user_id",
+    "affiliate_id",
+    "amount",
+    "currency",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

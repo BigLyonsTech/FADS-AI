@@ -1,0 +1,89 @@
+{
+  "name": "InventoryItem",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "name": {
+      "type": "string",
+      "description": "Item / product name."
+    },
+    "sku": {
+      "type": "string",
+      "description": "SKU / reference code."
+    },
+    "category": {
+      "type": "string",
+      "description": "Free-text category e.g. Uniforms, Books, Merchandise."
+    },
+    "supplier_id": {
+      "type": "string",
+      "description": "Optional link to a FinanceContact (kind supplier)."
+    },
+    "supplier_name": {
+      "type": "string",
+      "description": "Snapshot of supplier name for display."
+    },
+    "cost_price": {
+      "type": "number",
+      "default": 0,
+      "description": "Unit cost price in organisation currency."
+    },
+    "selling_price": {
+      "type": "number",
+      "default": 0,
+      "description": "Unit selling price in organisation currency."
+    },
+    "low_stock_level": {
+      "type": "number",
+      "default": 0,
+      "description": "Quantity at or below which the item is flagged low-stock."
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "current_quantity": {
+      "type": "number",
+      "default": 0,
+      "description": "Live stock on hand, recomputed from StockMovement records by the inventory backend function."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "name",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "name": "LeaveBalance",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS; set server-side only."
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee this balance belongs to."
+    },
+    "employee_name": {
+      "type": "string",
+      "description": "Snapshot of employee name for display."
+    },
+    "leave_type_id": {
+      "type": "string",
+      "description": "LeaveType ID."
+    },
+    "leave_type_name": {
+      "type": "string",
+      "description": "Snapshot of leave type name for display."
+    },
+    "year": {
+      "type": "integer",
+      "description": "Calendar year e.g. 2026."
+    },
+    "annual_allowance": {
+      "type": "number",
+      "default": 0,
+      "description": "Annual allowance in days for this leave type."
+    },
+    "carried_over": {
+      "type": "number",
+      "default": 0,
+      "description": "Days carried over from the previous year."
+    },
+    "used_days": {
+      "type": "number",
+      "default": 0,
+      "description": "Approved leave days used."
+    },
+    "pending_days": {
+      "type": "number",
+      "default": 0,
+      "description": "Days awaiting approval."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "employee_id",
+    "leave_type_id",
+    "year",
+    "annual_allowance"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.hr_organisations}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "no_such_role"
+      }
+    }
+  }
+}

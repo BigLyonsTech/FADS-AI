@@ -1,0 +1,92 @@
+{
+  "name": "CRMActivity",
+  "type": "object",
+  "properties": {
+    "organisation_id": {
+      "type": "string",
+      "description": "Owning organisation. Enforced by RLS."
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "Related CRMContact."
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Snapshot of contact name for display."
+    },
+    "lead_id": {
+      "type": "string",
+      "description": "Optional related CRMLead."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "note",
+        "call",
+        "email",
+        "meeting",
+        "sms",
+        "whatsapp",
+        "status_change",
+        "other"
+      ],
+      "default": "note",
+      "description": "note = free note; call/email/sms/whatsapp = communication log; meeting = meeting summary; status_change = automatic record when contact status changes."
+    },
+    "subject": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string",
+      "description": "Body text of the note, call summary, email content, etc."
+    },
+    "old_status": {
+      "type": "string",
+      "description": "For status_change activities: previous status."
+    },
+    "new_status": {
+      "type": "string",
+      "description": "For status_change activities: new status."
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Display name snapshot of the author."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "default": "live"
+    }
+  },
+  "required": [
+    "organisation_id",
+    "type",
+    "content",
+    "data_mode"
+  ],
+  "rls": {
+    "read": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "create": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "update": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    },
+    "delete": {
+      "data.organisation_id": {
+        "$in": "{{user.data.authorised_organisations}}"
+      }
+    }
+  }
+}
